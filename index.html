@@ -1,24 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
-<head>
-  <meta name="description" content="Webpage description goes here" />
-  <meta charset="utf-8">
-  <title>Change_me</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Denoising Diffusion via Image-Based Rendering</title>
+
+    <meta name="description" content="Denoising Diffusion via Image-Based Rendering">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="https://anciukevicius.github.io/ddibr/img/teaser.jpg">
+    <meta property="og:image:type" content="image/jpg">
+    <meta property="og:image:width" content="1296">
+    <meta property="og:image:height" content="840">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://anciukevicius.github.io/ddibr/"/>
+    <meta property="og:title" content="Denoising Diffusion via Image-Based Rendering" />
+    <meta property="og:description" content="Generating and reconstructing 3D scenes is a challenging open problem, which requires synthesizing plausible content that is fully consistent in 3D space. While recent methods such as neural radiance fields excel at view synthesis and 3D reconstruction, they cannot synthesize plausible details in unobserved regions since they lack a generative capability. Conversely, existing generative methods are typically not capable of reconstructing detailed, large-scale scenes in the wild, as they use limited-capacity 3D scene representations, require aligned camera poses, or rely on additional regularizers. In this work, we introduce the first diffusion model able to perform fast, detailed reconstruction and generation of real-world 3D scenes. To achieve this, we make three contributions. First, we introduce a new neural scene representation that can efficiently and accurately represent large 3D scenes, dynamically allocating more capacity as needed to capture details visible in each image. Second, we propose a denoising-diffusion framework to learn a prior over this novel 3D scene representation, using only 2D images without the need for any additional supervision signal such as masks, depths, or regularizers, required by prior works. Third, we introduce a fast and unified architecture that supports conditioning on varying numbers of images, including a priori generation of 3D scenes and reconstruction from one or several images. We evaluate the model on several challenging datasets of real and synthetic images, and demonstrate superior results on generation, novel view synthesis and 3D reconstruction." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Denoising Diffusion via Image-Based Rendering" />
+    <meta name="twitter:description" content="Generating and reconstructing 3D scenes is a challenging open problem, which requires synthesizing plausible content that is fully consistent in 3D space. While recent methods such as neural radiance fields excel at view synthesis and 3D reconstruction, they cannot synthesize plausible details in unobserved regions since they lack a generative capability. Conversely, existing generative methods are typically not capable of reconstructing detailed, large-scale scenes in the wild, as they use limited-capacity 3D scene representations, require aligned camera poses, or rely on additional regularizers. In this work, we introduce the first diffusion model able to perform fast, detailed reconstruction and generation of real-world 3D scenes. To achieve this, we make three contributions. First, we introduce a new neural scene representation that can efficiently and accurately represent large 3D scenes, dynamically allocating more capacity as needed to capture details visible in each image. Second, we propose a denoising-diffusion framework to learn a prior over this novel 3D scene representation, using only 2D images without the need for any additional supervision signal such as masks, depths, or regularizers, required by prior works. Third, we introduce a fast and unified architecture that supports conditioning on varying numbers of images, including a priori generation of 3D scenes and reconstruction from one or several images. We evaluate the model on several challenging datasets of real and synthetic images, and demonstrate superior results on generation, novel view synthesis and 3D reconstruction." />
+    <meta name="twitter:image" content="https://anciukevicius.github.io/ddibr/img/teaser.jpg" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+
+    <link rel="stylesheet" href="./css/bulma.min.css">
+    <link rel="stylesheet" href="./css/tailwind.css">
+    <link rel="stylesheet" href="./css/intro.css">
+    <link rel="stylesheet" href="./css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- <link rel="icon" href="./images/favicon.svg"> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="./js/bulma-carousel.min.js"></script>
+    <script src="./js/fontawesome.all.min.js"></script>
+
+    <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
-  
-<div class="container">
-  
-</div>
 
-<script>
-</script>
 
-</body>
-</html>
+<section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 aos-init aos-animate">
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">Generative-3D</span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section_small pt-0">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="column has-text-centered">
+            <p style="font-size: 20px;">
+              Our developed generative AI technology achieves state-of-the-art 3D/4D reconstruction from a single image or video
+            </p>
+  
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+    </div>
+  </section>
+
+  <section class="section" style="padding: 0rem 0rem 2rem;">
+    <div class="container is-max-desktop">
+      <div class="column has-text-centered">
+        <div class="intro_introContainer_1">
+          <div class="intro_introcard_1"><img src="./images/icons/one-dashboard.svg"
+                  alt="Dashboard Icon Image">
+              <p class="fonts_cardTitle_1 intro_introcard_1">Complete 3D</p>
+              <p class="intro_introcard_description">
+                Our model is able to synthesise unobserved content 
+                and fully reconstruct scenes with no missing volumes
+              </p>
+          </div>
+          <div class="intro_introcard_1"><img src="./images/icons/streamlined.svg"
+                  alt="Streamlined Icon Image">
+              <p class="fonts_cardTitle_1 intro_introcard_1">Simple</p>
+              <p class="intro_introcard_description">Our technology is able to recreate 
+                3D scenes from as little as a single image or video</p>
+          </div>
+          <div class="intro_introcard_1"><img src="./images/icons/ai-powered.svg"
+                  alt="AI Icon Image">
+              <p class="fonts_cardTitle_1 intro_introcard_1">Generative AI</p>
+              <p class="intro_introcard_description">We integrate denoising diffusion generative models with 
+                neural radiance fields 3D representations to achieve state-of-the-art 3D reconstruction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body custom-bulma-section-margin"  style="font-size: 20px;">
+      <div class="container">
+
+        <h3 class="title has-text-centered is-4 custom-bulma-title-margin">
+            3D reconstruction from a single frame
+        </h3>
+        <p>
+            Here we give our model a <b>single image</b> as input. We <b>accurately predict</b> the depths of
+            the visible part of the scene, but also <b>synthesises plausible details</b> in hidden regions.            
+        </p>
+        <br>
+        <p>
+          Top: MVImgNet chairs. Bottom: CO3D hydrants. These videos were not seen during model training.
+        </p>
+
+        <div id="results-carousel-horizontal" class="carousel results-carousel mt-5">
+
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/0.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/5.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/1.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/6.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/2.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/7.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/3.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/8.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/4.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/1-conditioning-image/stacked/9.mp4" /></video>
+            </div>
+
+        </div>
+      </div>
+
+      <div class="container mt-5">
+
+        <h3 class="title has-text-centered is-4 custom-bulma-title-margin">
+            3D reconstruction from six input frames
+        </h3>
+        <p>
+            Here we give our model <b>six images</b> as input. Our solution faithfully reconstructs the details visible
+            in all images, predicting realistic depth-maps and images with fine detail.
+        </p>
+        <br>
+        <p>
+            Top: MVImgNet chairs. Bottom: CO3D hydrants. These videos were not seen during model training.
+        </p>
+
+        <div id="results-carousel-horizontal" class="carousel results-carousel mt-5">
+
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/0.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/5.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/1.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/6.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/2.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/7.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/3.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/8.mp4" /></video>
+            </div>
+            <div>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/4.mp4" /></video>
+                <video loop autoplay muted width="768"><source src="videos/6-conditioning-images/stacked/9.mp4" /></video>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    $(window).on('load', function() {
+      bulmaCarousel.attach('#results-carousel-horizontal', {
+        slidesToScroll: 1,
+        slidesToShow: 2,
+        loop: true,
+        autoplay: true,
+      });
+    });
+  </script>
+  
+  <section class="section custom-bulma-section-margin">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">How it works</h2>
+          <div class="content has-text-justified">
+            <p>
+                Our neural scene representation <em>IB-planes</em> defines 3D content using image-space features. 
+                Each camera $\pi_v$ is associated with a feature-map $\mathbf{f}_v$ (blue); together both parametrise 
+                a neural field that defines density and color for each 3D point $p$ (red dot). This can be converted
+                to an image using standard NeRF ray-marching.
+            </p>
+            <p>
+                We incorporate this representation in a diffusion model over multi-view images. At each denoising 
+                step, noisy images $\mathbf{x}^{(t)}$ are encoded by a U-Net $E$ with cross-view attention (gray dashed 
+                arrows), that yields pixel-aligned features $\mathbf{f}_v$ (blue). To render pixels of denoised 
+                images (only one $\mathbf{x}^{(0)}$ is shown for clarity), we use volumetric ray-marching (green arrow), 
+                decoding features unprojected (red lines) from the other viewpoints.
+            </p>
+            <p>
+                For 3D reconstruction, we replace one or more of the noisy images with noise-free input images
+                and perform conditional generation. The noise in the other images encodes the content of regions
+                that are not visible in the input images, ensuring all parts of the scene are coherent and contain 
+                plausible details.
+            </p>
+  
+            <img id="ibplanes" width="100%" src="./images/ib-planes.png" alt="IB-planes scene representation" />
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  
+  <footer class="footer pt-4 pb-4">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              Website template based on 
+              <a href="https://marigoldmonodepth.github.io/">
+                Marigold 
+              </a>
+              , 
+              <a href="https://github.com/cruip/tailwind-landing-page-template?tab=readme-ov-file">
+                Cruip
+              </a>
+              ,
+              <a href="https://github.com/nerfies/nerfies.github.io">
+                Nerfies
+              </a>
+              and licensed under
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                CC-BY-SA-4.0</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  </body>
+
+  </html>
+  

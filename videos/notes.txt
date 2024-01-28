@@ -1,0 +1,2 @@
+created from the videos in the final rebuttal supplementary, by running:
+for F in {0..9} ; do ffmpeg -i ${F}_rgb.mp4 -i ${F}_depth.mp4 -filter_complex '[0:v]scale=384:384[v0];[1:v]scale=384:384[v1];[v0][v1]hstack=inputs=2' -crf 25 -y stacked/$F.mp4 ; done
