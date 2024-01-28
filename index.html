@@ -5,24 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>Denoising Diffusion via Image-Based Rendering</title>
+    <title>Generative-3D</title>
 
-    <meta name="description" content="Denoising Diffusion via Image-Based Rendering">
+    <meta name="description" content="Generative-3D">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:image" content="https://anciukevicius.github.io/ddibr/img/teaser.jpg">
     <meta property="og:image:type" content="image/jpg">
     <meta property="og:image:width" content="1296">
     <meta property="og:image:height" content="840">
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://anciukevicius.github.io/ddibr/"/>
-    <meta property="og:title" content="Denoising Diffusion via Image-Based Rendering" />
-    <meta property="og:description" content="Generating and reconstructing 3D scenes is a challenging open problem, which requires synthesizing plausible content that is fully consistent in 3D space. While recent methods such as neural radiance fields excel at view synthesis and 3D reconstruction, they cannot synthesize plausible details in unobserved regions since they lack a generative capability. Conversely, existing generative methods are typically not capable of reconstructing detailed, large-scale scenes in the wild, as they use limited-capacity 3D scene representations, require aligned camera poses, or rely on additional regularizers. In this work, we introduce the first diffusion model able to perform fast, detailed reconstruction and generation of real-world 3D scenes. To achieve this, we make three contributions. First, we introduce a new neural scene representation that can efficiently and accurately represent large 3D scenes, dynamically allocating more capacity as needed to capture details visible in each image. Second, we propose a denoising-diffusion framework to learn a prior over this novel 3D scene representation, using only 2D images without the need for any additional supervision signal such as masks, depths, or regularizers, required by prior works. Third, we introduce a fast and unified architecture that supports conditioning on varying numbers of images, including a priori generation of 3D scenes and reconstruction from one or several images. We evaluate the model on several challenging datasets of real and synthetic images, and demonstrate superior results on generation, novel view synthesis and 3D reconstruction." />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Denoising Diffusion via Image-Based Rendering" />
-    <meta name="twitter:description" content="Generating and reconstructing 3D scenes is a challenging open problem, which requires synthesizing plausible content that is fully consistent in 3D space. While recent methods such as neural radiance fields excel at view synthesis and 3D reconstruction, they cannot synthesize plausible details in unobserved regions since they lack a generative capability. Conversely, existing generative methods are typically not capable of reconstructing detailed, large-scale scenes in the wild, as they use limited-capacity 3D scene representations, require aligned camera poses, or rely on additional regularizers. In this work, we introduce the first diffusion model able to perform fast, detailed reconstruction and generation of real-world 3D scenes. To achieve this, we make three contributions. First, we introduce a new neural scene representation that can efficiently and accurately represent large 3D scenes, dynamically allocating more capacity as needed to capture details visible in each image. Second, we propose a denoising-diffusion framework to learn a prior over this novel 3D scene representation, using only 2D images without the need for any additional supervision signal such as masks, depths, or regularizers, required by prior works. Third, we introduce a fast and unified architecture that supports conditioning on varying numbers of images, including a priori generation of 3D scenes and reconstruction from one or several images. We evaluate the model on several challenging datasets of real and synthetic images, and demonstrate superior results on generation, novel view synthesis and 3D reconstruction." />
-    <meta name="twitter:image" content="https://anciukevicius.github.io/ddibr/img/teaser.jpg" />
+    <meta property="og:title" content="Generative-3D" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
